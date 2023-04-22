@@ -1,0 +1,37 @@
+# Node.js related files and directories
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+*.env
+
+# Dependency directories
+puppeteer/
+cypress/
+coverage/
+.nyc_output/
+logs/
+build/
+dist/
+tmp/
+temp/
+out/
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-workspace
+*.iml
+
+# OS generated files
+Thumbs.db
+.DS_Store
+ehthumbs.db
+Desktop.ini
+
+# Miscellaneous files and directories
+package-lock.json
+yarn.lock
