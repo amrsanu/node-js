@@ -4,11 +4,18 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const errorController = require('./controllers/error');
 const User = require('./models/user');
 
+const MONGODB_URI = 'mongodb+srv://amrsanu:Root123@cluster0.cdopsge.mongodb.net/shop?retryWrites=true&w=majority'
+
 const app = express();
+const store = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: 'sessions',
+});
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -23,10 +30,15 @@ app.use(session({
   secret: 'my secret for the session sfdjhsabwiurew938ryhfeksdjb',
   resave: false,
   saveUninitialized: false,
-}))
+  store: store,
+}));
 
+// middleware
 app.use((req, res, next) => {
-  User.findById('64500e6f4734c1f17142b145')
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
     .then(user => {
       req.user = user;
       next();
@@ -42,7 +54,7 @@ app.use(errorController.get404);
 
 
 // For mongoose connection.
-mongoose.connect('mongodb+srv://amrsanu:Root123@cluster0.cdopsge.mongodb.net/shop?retryWrites=true&w=majority')
+mongoose.connect(MONGODB_URI)
     .then(result => {
       User.findOne()
         .then(user => {
